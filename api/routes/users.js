@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
     const user = userId
       ? await User.findById(userId)
       : await User.findOne({ username: username });
-    const { password, updatedAt, ...other } = user._doc;    // eliminate unnessary properties when results return
+    const { password, updatedAt, createdAt, ...other } = user._doc;    // eliminate unnessary properties when results return
     res.status(200).json(other);      // only send "other"
   } catch (err) {
     res.status(500).json(err);
@@ -62,7 +62,7 @@ router.get("/getAll", async (req, res) => {
     const users = await User.find();
 
     const tmpUsers = users.map(user => {
-      const { password, updatedAt, ...other } = user._doc;    // eliminate unnessary properties when results return
+      const { password, updatedAt, ...other } = user._doc;    // eliminate unnessary properties when results return (like "password")
       return other;  // only send "other"
     });
 

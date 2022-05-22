@@ -4,14 +4,16 @@ const io = require("socket.io")(8900, {
   },
 });
 
-let users = [];
+let users = [];   // all users will be saved into this array
 
-const addUser = (userId, socketId) => {
+const addUser = (userId, socketId) => {   // when a user is connected
   !users.some((user) => user.userId === userId) &&
     users.push({ userId, socketId });
+
+  // console.log(users);
 };
 
-const removeUser = (socketId) => {
+const removeUser = (socketId) => {    // when a user is disconnected
   users = users.filter((user) => user.socketId !== socketId);
 };
 
@@ -20,25 +22,31 @@ const getUser = (userId) => {
 };
 
 io.on("connection", (socket) => {
-  //when ceonnect
+  // when connect
   console.log("a user connected.");
 
-  //take userId and socketId from user
+  // take userId and socketId from user
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
-    io.emit("getUsers", users);
+    io.emit("getUsers", users); // send currently online users to all clients
   });
 
-  //send and get message
+  // send and get message
   socket.on("sendMessage", ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId);
-    io.to(user.socketId).emit("getMessage", {
-      senderId,
-      text,
-    });
+    // console.log(text);
+
+    const receiver = getUser(receiverId);
+
+    // if receiver is online (exist on socket server), tell that receiver to get message
+    // if (receiver) {
+      io.to(receiver?.socketId).emit("getMessage", {
+        senderId,
+        text,
+      });
+    // }
   });
 
-  //when disconnect
+  // when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected!");
     removeUser(socket.id);

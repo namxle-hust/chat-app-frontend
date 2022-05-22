@@ -2,6 +2,7 @@ import "./messenger.css";
 import Topbar from "../../components/topbar/Topbar";
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
+import CurrentChatBox from "../../components/currentChatBox/CurrentChatBox";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -14,14 +15,16 @@ export default function Messenger() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);   // store online users' ids
   const socket = useRef();
   const { user } = useContext(AuthContext);
   const scrollRef = useRef();
 
   useEffect(() => {
     socket.current = io("ws://localhost:8900"); // local socket server address 
-    socket.current.on("getMessage", (data) => {
+    socket.current.on("getMessage", (data) => { // socket server sends message from others to current user to get
+      console.log(data.text);
+
       setArrivalMessage({
         sender: data.senderId,
         text: data.text,
@@ -31,21 +34,25 @@ export default function Messenger() {
   }, []);
 
   useEffect(() => {
+    // check for arrival message and does that message is sent by the user in that conversation
     arrivalMessage &&
       currentChat?.members.includes(arrivalMessage.sender) &&
-      setMessages((prev) => [...prev, arrivalMessage]);
+      setMessages((prev) => [...prev, arrivalMessage]);   // add arrival message to the current conversation
   }, [arrivalMessage, currentChat]);
 
   useEffect(() => {
-    socket.current.emit("addUser", user._id);
+    socket.current.emit("addUser", user._id);   // add current user id to the socket server
     socket.current.on("getUsers", (users) => {
+      const currentOnlineUsersId =  users.filter(u => u.userId !== user._id).map(u => u.userId);
       setOnlineUsers(
-        // user.followings.filter((f) => users.some((u) => u.userId === f))
+        currentOnlineUsersId
       );
     });
   }, [user]);
 
   useEffect(() => {
+    // console.log('arrival message changed');
+
     const getConversations = async () => {
       try {
         const res = await axios.get("/conversations/" + user._id);
@@ -55,7 +62,7 @@ export default function Messenger() {
       }
     };
     getConversations();
-  }, [user._id]);
+  }, [user._id, arrivalMessage, currentChat]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -124,26 +131,35 @@ export default function Messenger() {
         <div className="chatBox">
           <div className="chatBoxWrapper">
             {currentChat ? (
-              <>
-                <div className="chatBoxTop">
-                  {messages.map((m) => (
-                    <div ref={scrollRef}>
-                      <Message message={m} own={m.sender === user._id} />
-                    </div>
-                  ))}
-                </div>
-                <div className="chatBoxBottom">
-                  <textarea
-                    className="chatMessageInput"
-                    placeholder="write something..."
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    value={newMessage}
-                  ></textarea>
-                  <button className="chatSubmitButton" onClick={handleSubmit}>
-                    Send
-                  </button>
-                </div>
-              </>
+              // <>
+              //   <div className="chatBoxTop">
+              //     {messages.map((m) => (
+              //       <div ref={scrollRef}>
+              //         <Message message={m} own={m.sender === user._id} />
+              //       </div>
+              //     ))}
+              //   </div>
+              //   <div className="chatBoxBottom">
+              //     <textarea
+              //       className="chatMessageInput"
+              //       placeholder="write something..."
+              //       onChange={(e) => setNewMessage(e.target.value)}
+              //       value={newMessage}
+              //     ></textarea>
+              //     <button className="chatSubmitButton" onClick={handleSubmit}>
+              //       Send
+              //     </button>
+              //   </div>
+              // </>
+              <CurrentChatBox 
+                messages={messages}
+                user = {user}
+                setNewMessage = {setNewMessage}
+                newMessage = {newMessage}
+                handleSubmit = {handleSubmit}
+                scrollRef = {scrollRef}
+                membersId = {currentChat?.members}
+              />
             ) : (
               <span className="noConversationText">
                 Open a conversation to start a chat.
@@ -153,8 +169,9 @@ export default function Messenger() {
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
+            <p>Online</p>
             <ChatOnline
-              onlineUsers={onlineUsers}
+              onlineUsersId={onlineUsers}
               currentId={user._id}
               setCurrentChat={setCurrentChat}
             />
