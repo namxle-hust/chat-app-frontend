@@ -2,7 +2,7 @@ import Message from "../../components/message/Message";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function  CurrentChatBox({ messages, user, setNewMessage, newMessage, handleSubmit, scrollRef, membersId }) {
+export default function  CurrentChatBox({ messages, user, setNewMessage, newMessage, handleSubmit, scrollRef, membersId, currentChat }) {
     const [membersInBox, setMembersInBox] = useState([]);
 
     useEffect(() => {
@@ -14,7 +14,12 @@ export default function  CurrentChatBox({ messages, user, setNewMessage, newMess
         };
     
         getMembers();
-    }, []);
+    }, [currentChat]);
+
+     // test useEffect
+    useEffect(() => {
+      console.log('members in box: ', membersInBox);
+    }, [membersInBox]);
 
     return (
     <>

@@ -4,7 +4,7 @@ const io = require("socket.io")(8900, {
   },
 });
 
-let users = [];   // all users will be saved into this array
+let users = [];   // all online users will be saved into this array
 
 const addUser = (userId, socketId) => {   // when a user is connected
   !users.some((user) => user.userId === userId) &&

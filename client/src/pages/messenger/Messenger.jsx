@@ -20,6 +20,11 @@ export default function Messenger() {
   const { user } = useContext(AuthContext);
   const scrollRef = useRef();
 
+  // // test useEffect
+  // useEffect(() => {
+  //   console.log('conversations: ', conversations);
+  // }, [conversations]);
+
   useEffect(() => {
     socket.current = io("ws://localhost:8900"); // local socket server address 
     socket.current.on("getMessage", (data) => { // socket server sends message from others to current user to get
@@ -52,6 +57,7 @@ export default function Messenger() {
 
   useEffect(() => {
     // console.log('arrival message changed');
+    console.log('current chat changed');
 
     const getConversations = async () => {
       try {
@@ -62,6 +68,8 @@ export default function Messenger() {
       }
     };
     getConversations();
+
+  
   }, [user._id, arrivalMessage, currentChat]);
 
   useEffect(() => {
@@ -119,10 +127,10 @@ export default function Messenger() {
             <hr className="sidebarHr"/>
             <p style={{ fontWeight: '300' }}>Current conversations</p>
 
-            {/* <input placeholder="Search for friends" className="chatMenuInput" /> */}
+            {/* <input placeholder="Search for friends" className "chatMenuInput" /> */}
             {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} currentUser={user} />
+              <div onClick={() => setCurrentChat(c)} >
+                <Conversation conversation={c} currentUser={user} key={c._id}/>
               </div>
             ))}
           </div>
@@ -158,7 +166,8 @@ export default function Messenger() {
                 newMessage = {newMessage}
                 handleSubmit = {handleSubmit}
                 scrollRef = {scrollRef}
-                membersId = {currentChat?.members}
+                membersId = {currentChat.members}
+                currentChat = {currentChat}
               />
             ) : (
               <span className="noConversationText">
