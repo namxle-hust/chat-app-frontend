@@ -101,7 +101,7 @@ export default function Login() {
           <h5>Sign in</h5>
           <form onSubmit={handleClick}>
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Username or email" required autofocus ref={email}/>
+                <input type="text" class="form-control" placeholder="Email" required autofocus ref={email}/>
             </div>
             <div class="form-group">
                 <input type="password" class="form-control" placeholder="Password" required minLength="6"  ref={password}/>
