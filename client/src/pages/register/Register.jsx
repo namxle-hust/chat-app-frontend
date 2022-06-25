@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useRef } from "react";
 import { useHistory } from "react-router";
+import { apiRoutes } from "../../utils-contants";
 
 export default function Register() {
   const username = useRef();
@@ -15,12 +16,12 @@ export default function Register() {
       console.log("Passwords don't match!");
     } else {
       const user = {
-        username: username.current.value,
+        user_name: username.current.value,
         email: email.current.value,
         password: password.current.value,
       };
       try {
-        await axios.post("/auth/register", user);
+        await axios.post(apiRoutes.register, user);
         history.push("/login");
       } catch (err) {
         console.log(err);
@@ -29,34 +30,34 @@ export default function Register() {
   };
 
   return (
-    // <div className="login">
-    //   <div className="loginWrapper">
-    //     <div className="loginLeft">
-    //       <h3 className="loginLogo">Hoang cute social</h3>
-    //       <span className="loginDesc">
+    // <div className Name="login">
+    //   <div className Name="loginWrapper">
+    //     <div className Name="loginLeft">
+    //       <h3 className Name="loginLogo">Hoang cute social</h3>
+    //       <span className Name="loginDesc">
     //         Connect with friends and the world around you on Lamasocial.
     //       </span>
     //     </div>
-    //     <div className="loginRight">
-    //       <form className="loginBox" onSubmit={handleClick}>
+    //     <div className Name="loginRight">
+    //       <form className Name="loginBox" onSubmit={handleClick}>
     //         <input
     //           placeholder="Username"
     //           required
     //           ref={username}
-    //           className="loginInput"
+    //           className Name="loginInput"
     //         />
     //         <input
     //           placeholder="Email"
     //           required
     //           ref={email}
-    //           className="loginInput"
+    //           className Name="loginInput"
     //           type="email"
     //         />
     //         <input
     //           placeholder="Password"
     //           required
     //           ref={password}
-    //           className="loginInput"
+    //           className Name="loginInput"
     //           type="password"
     //           minLength="6"
     //         />
@@ -64,14 +65,14 @@ export default function Register() {
     //           placeholder="Confirm Password"
     //           required
     //           ref={passwordAgain}
-    //           className="loginInput"
+    //           className Name="loginInput"
     //           type="password"
     //         />
-    //         <button className="loginButton" type="submit">
+    //         <button className Name="loginButton" type="submit">
     //           Sign Up
     //         </button>
     //         <button
-    //           className="loginRegisterButton"
+    //           className Name="loginRegisterButton"
     //           type="button"
     //           onClick={() => {
     //             history.push("/login");
@@ -84,10 +85,10 @@ export default function Register() {
     //   </div>
     // </div>
 
-    <body class="form-membership">
-      <div class="form-wrapper">
+    <body className="form-membership">
+      <div className="form-wrapper">
         {/* <!-- logo --> */}
-        <div class="logo">
+        <div className="logo">
           <svg
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
@@ -138,49 +139,49 @@ export default function Register() {
 
         {/* <!-- form --> */}
         <form onSubmit={handleClick}>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               placeholder="username"
               required
               autofocus=""
               ref={username}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="email"
-              class="form-control"
+              className="form-control"
               placeholder="Email"
               required
               ref={email}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               placeholder="Password"
               required
               ref={password}
             />
           </div>
-          <div class="form-group">
+          <div className="form-group">
             <input
               type="password"
-              class="form-control"
+              className="form-control"
               placeholder="Confirm Password"
               required
               ref={passwordAgain}
             />
           </div>
 
-          <button class="btn btn-primary btn-block">Register</button>
+          <button className="btn btn-primary btn-block">Register</button>
           <hr />
-          <p class="text-muted">Already have an account?</p>
+          <p className="text-muted">Already have an account?</p>
           <button
-            class="btn btn-outline-light btn-sm"
+            className="btn btn-outline-light btn-sm"
             onClick={() => {
               history.push("/login");
             }}
