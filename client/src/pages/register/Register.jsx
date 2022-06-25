@@ -143,7 +143,7 @@ export default function Register() {
             <input
               type="text"
               className="form-control"
-              placeholder="username"
+              placeholder="Username"
               required
               autofocus=""
               ref={username}
