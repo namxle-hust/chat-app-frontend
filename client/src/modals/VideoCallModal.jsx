@@ -1,54 +1,66 @@
+import * as React from "react";
+import Modal from "@mui/material/Modal";
+import { useEffect } from "react";
+import "./VideoCallModal.css";
 
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-import { Grid, Paper, makeStyles } from '@material-ui/core';
+export default function VideoCallModal({
+  open,
+  handleOpen,
+  handleClose,
+  currentCallingUser,
+  setCurrentCallingUser,
+  currentCallId,
+  setCurrentCallId,
+  handleVideoCallDecline,
+  arrivalMessage,
+}) {
+  useEffect(() => {
+    if (
+      arrivalMessage?.message_type === "call" &&
+      arrivalMessage?.message === "Missed Call"
+    ) {
+      handleClose();
+      setCurrentCallingUser(null);
+      setCurrentCallId(null);
+    }
+  }, [arrivalMessage]);
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+  const handleVideoCall = () => {
+    function createPopupWin(pageURL, pageTitle, width, height) {
+      var leftPosition, topPosition;
+      //Allow for borders.
+      leftPosition = window.screen.width / 2 - width / 2;
+      //Allow for title and status bars.
+      topPosition = window.screen.height / 2 - (height / 2 + 50);
+      window.open(
+        pageURL,
+        pageTitle,
+        "resizable=yes, width=" +
+          width +
+          ", height=" +
+          height +
+          ", top=" +
+          topPosition +
+          ", left=" +
+          leftPosition
+      );
+    }
 
-const useStyles = makeStyles((theme) => ({
-  video: {
-    width: '550px',
-    [theme.breakpoints.down('xs')]: {
-      width: '300px',
-    },
-  },
-  gridContainer: {
-    justifyContent: 'center',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-    },
-  },
-  paper: {
-    padding: '10px',
-    border: '2px solid black',
-    margin: '10px',
-  },
-}));
+    let tmpObj = {
+      user_token: localStorage.getItem("token"),
+      user_id: currentCallingUser.id,
+      status: "answer",
+      call_id: currentCallId,
+    };
 
-export default function VideoCallModal({ open, handleOpen, handleClose }) {
+    let url = `http://localhost:9090/${tmpObj.user_token}/${tmpObj.user_id}/${tmpObj.status}/${tmpObj.call_id}`;
+    createPopupWin(url, "Video Call", "990", "650");
 
-  const classes = useStyles();
-
-  const stream = true;
-  const callAccepted = true;
-  const callEnded = true;
-  const name = 'random';
-  const myVideo = '';
-  const call = '';
-  const userVideo = '';
+    setCurrentCallingUser(null);
+    setCurrentCallId(null);
+  };
 
   return (
     <div>
@@ -58,77 +70,120 @@ export default function VideoCallModal({ open, handleOpen, handleClose }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-            place video component here
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-
-        {/* <Grid container className={classes.gridContainer}>
-          {stream && (
-            <Paper className={classes.paper}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h5" gutterBottom>{name || 'Name'}</Typography>
-                <video 
-                  playsInline 
-                  muted 
-                  // ref={myVideo} 
-                  autoPlay 
-                  className={classes.video} />
-              </Grid>
-            </Paper>
-          )}
-          {callAccepted && !callEnded && (
-            <Paper className={classes.paper}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h5" gutterBottom>{call.name || 'Name'}</Typography>
-                <video 
-                  playsInline 
-                  // ref={userVideo} 
-                  autoPlay 
-                  className={classes.video} />
-              </Grid>
-            </Paper>
-          )}
-        </Grid> */}
-
+        <div
+          class="modal call fade show"
+          id="videoCall"
+          tabIndex="-1"
+          role="dialog"
+          aria-modal="true"
+          style={{ display: "block" }}
+        >
+          <div
+            class="modal-dialog modal-dialog-centered modal-dialog-zoom"
+            role="document"
+          >
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="call">
+                  <div>
+                    <div className="call-animation">
+                      {/* <figure class="mb-4 avatar avatar-xl"> */}
+                      <img
+                        src={
+                          currentCallingUser.profile_pic_url
+                            ? currentCallingUser.profile_pic_url
+                            : PF + "person/noAvatar.png"
+                        }
+                        class=""
+                        alt="image"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          borderRadius: "100%",
+                          position: "absolute",
+                          left: "-5px",
+                          top: "-5px",
+                        }}
+                      />
+                      {/* </figure> */}
+                    </div>
+                    <h4>
+                      {" "}
+                      {currentCallingUser.user_name}{" "}
+                      <span class="text-success">video calling...</span>
+                    </h4>
+                    <div class="action-button">
+                      <button
+                        type="button"
+                        class="btn btn-danger btn-floating btn-lg"
+                        data-dismiss="modal"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleClose();
+                          handleVideoCallDecline(
+                            currentCallingUser.id,
+                            currentCallId
+                          );
+                          setCurrentCallingUser(null);
+                          setCurrentCallId(null);
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-x"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-success btn-pulse btn-floating btn-lg"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleClose();
+                          handleVideoCall();
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="feather feather-video"
+                        >
+                          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                          <rect
+                            x="1"
+                            y="5"
+                            width="15"
+                            height="14"
+                            rx="2"
+                            ry="2"
+                          ></rect>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Modal>
     </div>
   );
 }
-
-
-
-
-// export default function VideoCallModal() {
-//     return (
-//         <div class="modal call fade" id="videoCall" tabindex="-1" role="dialog" aria-hidden="true">
-//             <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
-//                 <div class="modal-content">
-//                     <div class="modal-body">
-//                         <div class="call">
-//                             <div>
-//                                 <figure class="mb-4 avatar avatar-xl">
-//                                     <img src="./dist/media/img/women_avatar1.jpg" class="rounded-circle" alt="image" />
-//                                 </figure>
-//                                 <h4>Brietta Blogg <span class="text-success">video calling...</span></h4>
-//                                 <div class="action-button">
-//                                     <button type="button" class="btn btn-danger btn-floating btn-lg" data-dismiss="modal">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-//                                     </button>
-//                                     <button type="button" class="btn btn-success btn-pulse btn-floating btn-lg">
-//                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-video"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-//                                     </button>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
