@@ -4,7 +4,7 @@ import FriendsSidebar from "../../components/friendsSidebar/FriendsSidebar";
 import ProfileBar from "../../components/profileBar/ProfileBar";
 import ConversationSidebar from "../../components/conversationsSidebar/ConversationSidebar";
 
-import { useContext, useEffect, useRef, useState, useCallback } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import {
@@ -13,6 +13,7 @@ import {
   navigations,
   socketEvents,
 } from "../../utils-contants";
+import VideoCallModal from "../../modals/VideoCallModal";
 
 // ------------------ socket ----------------------
 import socketIOClient from "socket.io-client";
@@ -36,12 +37,27 @@ export default function Messenger() {
   );
   const [isProfileBarActive, setProfileBarActive] = useState(false);
   const [profileBarUserInfo, setProfileBarUserInfo] = useState(null);
-  // const [connectSocketSuccess, setConnectSocketSuccess] = useState(false);
+  // const [connectSocketSucess, setConnectSocketSuccess] = useState(false);
+  const [deliveredMessage, setDeliveredMessage] = useState(null);
+  // last message delivered by current logged in user so basicly we'll still have to use message id :)
+  // search id from last to first for faster finding
+
+  const [messagesQueue, setMessagesQueue] = useState([]); // for potato machine like macos :V
+
+  // ---------- video call modal ---------
+  const [openVideoCallModal, setOpenVideoCallModal] = useState(false);
+
+  const [currentCallingUser, setCurrentCallingUser] = useState(null);
+  const [currentCallId, setCurrentCallId] = useState(null);
+  const handleOpenModal = () => setOpenVideoCallModal(true);
+  const handleCloseModal = () => setOpenVideoCallModal(false);
+  // ------- ./modal ----------
 
   const { user } = useContext(AuthContext);
   const scrollRef = useRef();
 
   let runOneTime = true;
+  let isMessageQueueDone = true; // for potato machine like macos :V
 
   useEffect(() => {
     delete socketIOClient.sails;
@@ -51,12 +67,6 @@ export default function Messenger() {
     ioClient.sails.useCORSRouteToGetCookie = false;
     ioClient.sails.query = `token=${localStorage.getItem("token")}`;
 
-    ioClient.socket.get("/subscribe", function (res) {
-      // connect to socket server realtime
-      console.log(res);
-      console.log("connect socket successfully !");
-    });
-
     if (runOneTime) {
       ioClient.socket.on("getUsers", function (res) {
         // get currently online users
@@ -65,26 +75,67 @@ export default function Messenger() {
       });
 
       ioClient.socket.on("updateMessage", function (res) {
-        console.log("udpate message", res);
+        console.log("update delivered message", res);
+        setDeliveredMessage(res);
+      });
+
+      // someone call you
+      ioClient.socket.on("calling", function (res) {
+        const getUser = async (user_id, call_id) => {
+          try {
+            const tmp = await axios.get(
+              apiRoutes.getUser(user_id),
+              axiosHeadersObject()
+            );
+            setCurrentCallingUser(tmp.data);
+            setCurrentCallId(call_id);
+
+            // open video modal
+            setOpenVideoCallModal(true);
+          } catch (err) {
+            console.log(err);
+          }
+        };
+
+        getUser(res.user_sent_id, res.id);
       });
 
       ioClient.socket.on("getMessage", function (res) {
         console.log("arrival message !: ", res);
 
         setArrivalMessage(res);
-
-        if (res.message_type != "call") {
-          ioClient.socket.get(
-            "/update-message",
-            { id: res.id, status: "delivered" },
-            function (d) {}
-          );
-        }
+        setMessagesQueue([...messagesQueue, res]); // push
       });
 
       runOneTime = false;
     }
+
+    ioClient.socket.get("/subscribe", function (res) {
+      // connect to socket server realtime
+      // if (res.status === 'success') setConnectSocketSuccess(true);
+      console.log(res);
+      console.log("connect socket successfully !");
+    });
   }, []);
+
+  // for potato machine like macos :V
+  useEffect(() => {
+    if (messagesQueue.length > 0 && isMessageQueueDone) {
+      isMessageQueueDone = false; // block other messages in queue
+      const res = messagesQueue.shift(); // pop
+
+      if (res.message_type != "call") {
+        console.log("update message: ", res);
+        ioClient.socket.get(
+          "/update-message",
+          { id: res.id, status: "delivered", user_sent_id: res.user_sent_id },
+          function (d) {
+            isMessageQueueDone = true; // allow other messages in queue since the current message queue is done.
+          }
+        );
+      }
+    }
+  }, [messagesQueue]);
 
   // after choosing a current chat, set messages of that current chat
   useEffect(() => {
@@ -99,8 +150,9 @@ export default function Messenger() {
     // check for arrival message (real time)
     // should check if the sender of the arrival message is in the current chat box (since current chat box display messages)
     if (
-      !currentChat?.is_group &&
-      currentChat?.userReceiveId === arrivalMessage?.user_sent_id
+      (!currentChat?.is_group &&
+        currentChat?.userReceiveId === arrivalMessage?.user_sent_id) ||
+      currentChat?.userReceiveId === arrivalMessage?.user_recv_id
     ) {
       setMessages([...messages, arrivalMessage]); // add arrival message to the current chat
     }
@@ -129,6 +181,9 @@ export default function Messenger() {
     // send private chat message (not a group)
     if (!currentChat.is_group) {
       // console.log('does this trigger ?')
+      console.log(newMessage);
+
+      if (newMessage.match(/^\s+$/) || !newMessage) return;
 
       const sendMessage = {
         message: newMessage,
@@ -137,7 +192,8 @@ export default function Messenger() {
       };
 
       ioClient.socket.get("/send", { ...sendMessage }, function (res) {
-        setMessages([...messages, res.data]); // reverse later
+        // console.log(res.data);
+        setMessages([...messages, res.data]);
       });
     } else {
     }
@@ -145,12 +201,66 @@ export default function Messenger() {
     setNewMessage("");
   };
 
+  const handleVideoCallDecline = (user_recv_id, msg_id) => {
+    ioClient.socket.get(
+      "/answer-call",
+      {
+        response: "decline",
+        user_recv_id: user_recv_id,
+        msg_id: msg_id,
+      },
+      function (res) {
+        console.log(res);
+      }
+    );
+  };
+
+  useEffect(() => {
+    // upload image :')
+    if (newMessage?.type === "image") {
+      // send private chat message (not a group)
+      if (!currentChat.is_group) {
+        const sendMessage = {
+          message: newMessage.url,
+          recvId: currentChat.userReceiveId,
+          msg_type: "image_url",
+        };
+
+        // console.log(sendMessage);
+
+        ioClient.socket.get("/send", { ...sendMessage }, function (res) {
+          // console.log('image', res);
+          setMessages([...messages, res.data]);
+        });
+
+        setNewMessage("");
+      } else {
+      }
+    }
+  }, [newMessage]);
+
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
     <body>
+      {currentCallingUser !== null && currentCallId !== null ? (
+        <VideoCallModal
+          open={openVideoCallModal}
+          handleOpen={handleOpenModal}
+          handleClose={handleCloseModal}
+          currentCallingUser={currentCallingUser}
+          setCurrentCallingUser={setCurrentCallingUser}
+          currentCallId={currentCallId}
+          setCurrentCallId={setCurrentCallId}
+          handleVideoCallDecline={handleVideoCallDecline}
+          arrivalMessage={arrivalMessage}
+        />
+      ) : (
+        <></>
+      )}
+
       {/* <!-- layout --> */}
       <div className="layout">
         {/* <!-- navigation --> */}
@@ -206,6 +316,7 @@ export default function Messenger() {
               handleSubmit={handleSubmit}
               scrollRef={scrollRef}
               currentChat={currentChat}
+              deliveredMessage={deliveredMessage}
             />
           ) : (
             <span

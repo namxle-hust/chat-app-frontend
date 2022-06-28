@@ -194,7 +194,7 @@ export default function CurrentChatBox({
                   const sender = membersInBox.find(
                     (member) => member?.id === m?.user_sent_id
                   );
-                  // for testing
+               
                   const isLastMessSentByCurrentUser =
                     m?.id === deliveredMessage?.id;
                   const isLastMessDelivered =
