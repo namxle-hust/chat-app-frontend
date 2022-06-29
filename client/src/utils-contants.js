@@ -8,13 +8,13 @@ export const navigations = {
 // read more here: https://create-react-app.dev/docs/proxying-api-requests-in-development/
 
 export const apiRoutes = {
-    register: '/auth/register',
-    login: '/auth/login',
+    register: '/register',
+    login: '/login',
     getAllUsers: '/users/getAll',
-    getUser: (id) => { return `/users/?userId=${id}` },
+    getUser: (id) => { return `/users/${id}` },
     createNewConversation: `/conversations`, // co the ko can
-    findAConversation: (firstUserId, secondUserId) => { return `/conversations/find/${firstUserId}/${secondUserId}` }, // of 2 users
-    getConversations: (userId) => {return `/conversations/${userId}`},  // get conversations of a user
+    findAConversation: (userId) => { return `/conversation/private-chat/${userId}` }, // find a conversation with the other user (id)
+    getConversations: `/conversations`,  // get conversations of current user
     createAMessage: () => { return `/messages`; },      // create a message
     getMessages: (conversationId) => { return `/messages/${conversationId}`}, // get messages of a conversation
 } 
@@ -25,3 +25,29 @@ export const socketEvents = {
     getUsers: 'getUsers', // get online users currently on socket server
     sendMessage: 'sendMessage', // current logged in user send message
 }
+
+export const axiosHeadersObject = (AuthorizeToken) => {
+    return {
+        headers: { 
+            'Authorization': `Bearer ${AuthorizeToken ? AuthorizeToken: localStorage.getItem('token')}` 
+        }
+    }
+}
+
+// fake api call axios
+// how to use:
+// await fakeAxios(2000);
+
+export const fakeAxios = ms => new Promise(
+    resolve => setTimeout(resolve, ms));
+
+// const conversation = {
+//     isPrivateChat: true,
+//     userReceiveId: user.id,
+    
+//     ----------------------
+
+//     conversationName: string,
+//     conversationImg: string,
+//     chats: [], // messages
+// };

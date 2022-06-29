@@ -44,6 +44,8 @@ export default function Messenger() {
 
   const [messagesQueue, setMessagesQueue] = useState([]); // for potato machine like macos :V
 
+  const [userUpdated, setUserUpdated] = useState(false); // to rerender the whole page when updated an user profile
+
   // ---------- video call modal ---------
   const [openVideoCallModal, setOpenVideoCallModal] = useState(false);
 
@@ -270,6 +272,8 @@ export default function Messenger() {
           setProfileBarActive={setProfileBarActive}
           setProfileBarUserInfo={setProfileBarUserInfo}
           currentNavigation={currentNavigation}
+          userUpdated={userUpdated}
+          setUserUpdated={setUserUpdated}
         />
         {/* <!-- ./ navigation --> */}
 

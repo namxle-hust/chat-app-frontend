@@ -1,7 +1,9 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import { useState } from "react";
 import Modal from "@mui/material/Modal";
+import "./EditProfileModal.css";
+import { useEffect } from "react";
+import { fakeAxios } from "../utils-contants";
 
 const style = {
   position: "absolute",
@@ -15,12 +17,80 @@ const style = {
   p: 4,
 };
 
-export default function EditProfileModal({ open, handleOpen, handleClose }) {
+export default function EditProfileModal({
+  open,
+  handleOpen,
+  handleClose,
+  user,
+  userUpdated,
+  setUserUpdated,
+}) {
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [file, setFile] = useState(null);
+
+  const [isProfileHover, setIsProfileHover] = useState(false);
+  const [shouldSave, setShouldSave] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+
+  useEffect(() => {
+    setUserName(user.user_name);
+    setEmail(user.email);
+    setAvatar(user.profile_pic_url);
+  }, []);
+
+  useEffect(() => {
+    if (
+      userName === user.user_name &&
+      email === user.email &&
+      password === "" &&
+      file === null
+    ) {
+      setShouldSave(false);
+    } else {
+      setShouldSave(true);
+    }
+  }, [userName, email, password, file]);
+
+  const handleSave = async () => {
+    if (!shouldSave) return;
+
+    console.log("save thui hehe !!");
+
+    setLoadingSave(true);
+
+    await fakeAxios(2000);
+
+    setLoadingSave(false);
+    setUserName(user.user_name);
+    setEmail(user.email);
+    setAvatar(user.profile_pic_url);
+    setFile(null);
+    setShouldSave(false);
+    setLoadingSave(false);
+    setUserUpdated(!userUpdated);
+
+    handleClose();
+  };
+
   return (
-    <div>
+    <div style={{ position: "relative" }}>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => {
+          setUserName(user.user_name);
+          setEmail(user.email);
+          setAvatar(user.profile_pic_url);
+          setFile(null);
+          setShouldSave(false);
+          setLoadingSave(false);
+
+          handleClose();
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -30,208 +100,170 @@ export default function EditProfileModal({ open, handleOpen, handleClose }) {
         <div
           style={{
             position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 4,
+            left: "42%",
+            top: "15%",
+            width: "550px",
           }}
         >
-          <img src="https://img.freepik.com/free-vector/website-construction-with-laptop_24911-54680.jpg" />
+          {/* <div class="check">
+            <input type="checkbox" id="checkbox" onchange="document.body.classList.toggle('capture')" /><label for="checkbox">test</label>
+          </div> */}
+          <div class="phone">
+            <div
+              class="chevron"
+              onClick={() => {
+                setUserName(user.user_name);
+                setEmail(user.email);
+                setAvatar(user.profile_pic_url);
+                setFile(null);
+                setShouldSave(false);
+                setLoadingSave(false);
+
+                handleClose();
+              }}
+              style={{ height: "40px", width: "40px" }}
+            ></div>
+            <div class="title">Edit profile</div>
+
+            <img
+              class="avatar"
+              src={
+                isProfileHover
+                  ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuLnfPLVTh4KeLNvuyj15nRqSQ71A5yccavrGpwlTX2RJlM-_BD3_yCFALnCyOLHEoz1w"
+                  : file
+                  ? URL.createObjectURL(file)
+                  : avatar
+                  ? avatar
+                  : PF + "person/noAvatar.png"
+              }
+              style={
+                isProfileHover
+                  ? {
+                      cursor: "pointer",
+                      opacity: "80%",
+                    }
+                  : {
+                      cursor: "pointer",
+                    }
+              }
+              onMouseEnter={() => {
+                setIsProfileHover(true);
+              }}
+              onMouseLeave={() => {
+                setIsProfileHover(false);
+              }}
+              onClick={() => {
+                document.getElementById("file").click();
+              }}
+            />
+
+            {isProfileHover ? (
+              <input
+                style={{ display: "none" }}
+                className="avatar"
+                type="file"
+                id="file"
+                accept=".png,.jpeg,.jpg"
+                onChange={(e) => {
+                  setFile(e.target.files[0]);
+                }}
+              />
+            ) : (
+              <></>
+            )}
+
+            <div class="name">{user?.user_name}</div>
+            {/* <div class="name capture">
+              I <span class="obfuscate"></span> T <span class="obfuscate"></span>
+            </div> */}
+            {/* <div class="position">Senior Developer</div> */}
+            <div class="prop">Email</div>
+            {/* <div class="value">ivanataylor@kick-ass.code.com</div> */}
+            <input
+              class="value"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+            {/* <div class="value capture">
+              i <span class="obfuscate"></span> @k
+              <span class="obfuscate"></span> .com
+            </div> */}
+            <div class="prop">Username</div>
+            <input
+              class="value"
+              value={userName}
+              onChange={(e) => {
+                setUserName(e.target.value);
+              }}
+            />
+            {/* <div class="value capture">
+              <span class="obfuscate"></span>
+            </div> */}
+            <div class="prop">New Password</div>
+            <input
+              class="value"
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            {/* <div class="value capture">
+              <span class="obfuscate"></span>
+            </div> */}
+            {/* <div class="prop">Birthday</div>
+            <div class="values">
+              <div class="value value--small">11</div>
+              <div class="value value--small capture">
+                <span class="obfuscate"></span>
+              </div>
+              <div class="value value--small">Sep</div>
+              <div class="value value--small capture">
+                <span class="obfuscate"></span>
+              </div>
+              <div class="value value--small">1990</div>
+              <div class="value value--small capture">
+                <span class="obfuscate"></span>
+              </div>
+            </div>
+            <div class="joined">
+              Joined <span class="date">20 Oct 2020</span><span class="date capture"> <span class="obfuscate"></span></span>
+            </div> */}
+            {loadingSave ? (
+              <div class="loader-save"></div>
+            ) : (
+              <button
+                onClick={handleSave}
+                style={
+                  shouldSave
+                    ? {
+                        marginTop: "20px",
+                        border: "none",
+                        padding: "6px 25px",
+                        borderRadius: "20px",
+                        backgroundColor: "#437ab7",
+                        fontWeight: "400",
+                        outline: "none",
+                      }
+                    : {
+                        marginTop: "20px",
+                        border: "none",
+                        padding: "6px 25px",
+                        borderRadius: "20px",
+                        backgroundColor: "#c7c5c5",
+                        fontWeight: "400",
+                        outline: "none",
+                      }
+                }
+              >
+                Save
+              </button>
+            )}
+          </div>
         </div>
       </Modal>
     </div>
   );
 }
-
-// export default function EditProfileModal() {
-//     return (
-// <div className ="modal fade" id="editProfileModal" tabIndex="-1" role="dialog" aria-hidden="true">
-//     <div className ="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
-//         <div className ="modal-content">
-//             <div className ="modal-header">
-//                 <h5 className ="modal-title">
-//                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className ="feather feather-edit-2 mr-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg> Lorem ipsum is a pseudo-Latin text used
-//                 </h5>
-//                 <button type="button" className ="close" data-dismiss="modal" aria-label="Close">
-//                     <i className ="ti-close"></i>
-//                 </button>
-//             </div>
-//             <div className ="modal-body">
-//                 <ul className ="nav nav-tabs" role="tablist">
-//                     <li className ="nav-item">
-//                         <a className ="nav-link active" data-toggle="tab" href="#personal" role="tab" aria-controls="personal" aria-selected="true">Personal</a>
-//                     </li>
-//                     <li className ="nav-item">
-//                         <a className ="nav-link" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="false">About</a>
-//                     </li>
-//                     <li className ="nav-item">
-//                         <a className ="nav-link" data-toggle="tab" href="#social-links" role="tab" aria-controls="social-links" aria-selected="false">Social Links</a>
-//                     </li>
-//                 </ul>
-//                 <div className ="tab-content">
-//                     <div className ="tab-pane show active" id="personal" role="tabpanel">
-//                         <form>
-//                             <div className ="form-group">
-//                                 <label for="fullname" className ="col-form-label">Fullname</label>
-//                                 <div className ="input-group">
-//                                     <input type="text" className ="form-control" id="fullname" />
-//                                     <div className ="input-group-append">
-//                                         <span className ="input-group-text">
-//                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className ="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className ="form-group">
-//                                 <label className ="col-form-label">Avatar</label>
-//                                 <div className ="d-flex align-items-center">
-//                                     <div>
-//                                         <figure className ="avatar mr-3 item-rtl">
-//                                             <img src="./dist/media/img/man_avatar4.jpg" className ="rounded-circle" alt="image" />
-//                                         </figure>
-//                                     </div>
-//                                     <div className ="custom-file">
-//                                         <input type="file" className ="custom-file-input" id="customFile" />
-//                                         <label className ="custom-file-label" for="customFile">Choose file</label>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className ="form-group">
-//                                 <label for="city" className ="col-form-label">City</label>
-//                                 <div className ="input-group">
-//                                     <input type="text" className ="form-control" id="city" placeholder="Ex: Columbia" />
-//                                     <div className ="input-group-append">
-//                                         <span className ="input-group-text">
-//                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className ="feather feather-target"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className ="form-group">
-//                                 <label for="phone" className ="col-form-label">Phone</label>
-//                                 <div className ="input-group">
-//                                     <input type="text" className ="form-control" id="phone" placeholder="(555) 555 55 55" />
-//                                     <div className ="input-group-append">
-//                                         <span className ="input-group-text">
-//                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className ="feather feather-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className ="form-group">
-//                                 <label for="website" className ="col-form-label">Website</label>
-//                                 <input type="text" className ="form-control" id="website" placeholder="https://" />
-//                             </div>
-//                         </form>
-//                     </div>
-//                     <div className ="tab-pane" id="about" role="tabpanel">
-//                         <form>
-//                             <div className ="form-group">
-//                                 <label for="about-text" className ="col-form-label">Write a few words that describe
-//                                     you</label>
-//                                 <textarea className ="form-control" id="about-text"></textarea>
-//                             </div>
-//                             <div className ="custom-control custom-checkbox">
-//                                 <input type="checkbox" className ="custom-control-input" checked="" id="customCheck1" />
-//                                 <label className ="custom-control-label" for="customCheck1">View profile</label>
-//                             </div>
-//                         </form>
-//                     </div>
-//                     <div className ="tab-pane" id="social-links" role="tabpanel">
-//                         <form>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-facebook">
-//                                         <i className ="ti-facebook"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-twitter">
-//                                         <i className ="ti-twitter"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-instagram">
-//                                         <i className ="ti-instagram"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-linkedin">
-//                                         <i className ="ti-linkedin"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-dribbble">
-//                                         <i className ="ti-dribbble"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-youtube">
-//                                         <i className ="ti-youtube"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-google">
-//                                         <i className ="ti-google"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className ="form-group">
-//                             <div className ="input-group">
-//                                 <input type="text" className ="form-control" placeholder="Username" />
-//                                 <div className ="input-group-append">
-//                                     <span className ="input-group-text bg-whatsapp">
-//                                         <i className ="fa fa-whatsapp"></i>
-//                                     </span>
-//                                 </div>
-//                             </div>
-//                         </div>
-
-//                         </form>
-//                     </div>
-//                 </div>
-//             </div>
-//             <div className ="modal-footer">
-//                 <button type="button" className ="btn btn-primary">Save</button>
-//             </div>
-//         </div>
-//     </div>
-// </div>
-//     )
-// }
