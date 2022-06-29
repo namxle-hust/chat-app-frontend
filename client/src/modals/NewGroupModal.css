@@ -1,11 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap");
-
-.editprofile-check {
+/* body {
+  align-items: center;
+  background: #e0e0e3;
+  display: flex;
+  flex-direction: column;
+  font-family: "Assistant", sans-serif;
+  justify-content: center;
+  height: 100vh;
+  user-select: none;
+} */
+.check {
   align-items: center;
   display: flex;
   margin-bottom: 16px;
 }
-.editprofile-test {
+.test {
   display: none;
   opacity: 0.5;
   position: absolute;
@@ -13,16 +22,16 @@
   width: 400px;
   z-index: 1;
 }
-.editprofile-test.hide {
+.test.hide {
   display: none;
 }
-.editprofile-phone {
+.phone {
   align-items: center;
   background: #fff;
   border-radius: 18px;
   display: flex;
   flex-direction: column;
-  height: 490px;
+  height: 442px;
   position: relative;
   width: 60%;
   box-shadow: 0px 1.7px 2.2px rgba(0, 0, 0, 0.02),
@@ -31,12 +40,12 @@
     0px 25.1px 33.4px rgba(0, 0, 0, 0.05), 0px 60px 80px rgba(0, 0, 0, 0.07);
   /* font-family: "Assistant", sans-serif; */
 }
-.editprofile-title {
+.title {
   font-size: 19px;
   font-weight: 600;
   margin-top: -20px;
 }
-.editprofile-chevron:before {
+.chevron:before {
   content: " ";
   background-color: #282828;
   width: 2px;
@@ -45,7 +54,7 @@
   left: 10px;
   transform: translateX(11px) translateY(17px) rotate(45deg);
 }
-.editprofile-chevron:after {
+.chevron:after {
   content: " ";
   background-color: #282828;
   width: 2px;
@@ -55,60 +64,60 @@
   transform: translateX(11px) translateY(22px) rotate(-45deg);
 }
 
-.editprofile-chevron {
+.chevron {
     cursor: pointer;
     margin-right: 85%;
 }
 
-.editprofile-avatar {
+.avatar {
   background-color: #e0e0e3;
   border-radius: 50%;
   height: 90px;
   margin-top: 20px;
   width: 90px;
 }
-.editprofile-avatar.capture {
+.avatar.capture {
   display: none;
 }
-body.capture .editprofile-avatar {
+body.capture .avatar {
   display: none;
 }
-body.capture .editprofile-avatar.capture {
+body.capture .avatar.capture {
   display: block;
 }
-.editprofile-name {
+.name {
   font-size: 18px;
   font-weight: 700;
   margin-top: 4px;
 }
-.editprofile-name.capture {
+.name.capture {
   display: none;
 }
-body.capture .editprofile-name {
+body.capture .name {
   display: none;
 }
-body.capture .editprofile-name.capture {
+body.capture .name.capture {
   display: block;
 }
-.editprofile-obfuscate {
+.obfuscate {
   background-color: #e0e0e3;
   display: inline-block;
   height: 6px;
   width: 40px;
 }
-.editprofile-position {
+.position {
   color: #666;
   font-size: 15px;
   margin-bottom: 8px;
 }
-.editprofile-prop {
+.prop {
   align-self: flex-start;
   color: #666;
   font-size: 17px;
   margin: 12px 20px 0;
   margin-top: 20px;
 }
-.editprofile-value {
+.value {
   align-self: flex-start;
   border-bottom: 1px solid #666;
   font-size: 15px;
@@ -121,56 +130,56 @@ body.capture .editprofile-name.capture {
   border-right: none;
   outline: none;
 }
-.editprofile-value.capture {
+.value.capture {
   display: none;
 }
-body.editprofile-capture .value {
+body.capture .value {
   display: none;
 }
-body.editprofile-capture .value.capture {
+body.capture .value.capture {
   display: block;
 }
-.editprofile-values {
+.values {
   display: flex;
   width: 170px;
 }
-.editprofile-value--small {
+.value--small {
   width: 100%;
   margin: 0 12px 0 0px;
 }
-.editprofile-value--small .obfuscate {
+.value--small .obfuscate {
   width: 20px;
 }
-.editprofile-value--small:nth-child(5) {
+.value--small:nth-child(5) {
   margin: 0;
 }
-.editprofile-value--small:nth-child(6) {
+.value--small:nth-child(6) {
   margin: 0;
 }
-.editprofile-joined {
+.joined {
   align-self: flex-start;
   color: #666;
   font-size: 10px;
   margin: 32px 20px 0;
 }
-.editprofile-date {
+.date {
   align-self: flex-start;
   color: #282828;
   font-size: 10px;
   font-weight: 600;
 }
-.editprofile-date.capture {
+.date.capture {
   display: none;
 }
-body.capture .editprofile-date {
+body.capture .date {
   display: none;
 }
-body.capture .editprofile-date.capture {
+body.capture .date.capture {
   display: inline;
 }
 
-.editprofile-loader-save {
-    margin-top: 20px;
+.loader-save {
+    margin-top: 50px;
     border: 5px solid #f3f3f3; /* Light grey */
     border-top: 5px solid #3498db; /* Blue */
     border-radius: 50%;

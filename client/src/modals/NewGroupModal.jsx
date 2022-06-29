@@ -1,8 +1,13 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import './NewGroupModal.css';
+import { useState, useEffect, useContext } from 'react';
+import { apiRoutes, axiosHeadersObject, fakeAxios } from "../utils-contants";
+import MenuItem from '@mui/material/MenuItem';
+import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
+import { HighlightOff, AddCircleOutline, AddCircle } from '@material-ui/icons';
+
 
 const style = {
   position: 'absolute',
@@ -17,93 +22,247 @@ const style = {
 };
 
 export default function NewGroupModal({ open, handleOpen, handleClose }) {
+  const [groupName, setGroupName] = useState('');
+  const [chosenGroupMembers, setChosenGroupMembers] = useState([]); // { id: 1, user_name: '' }
+  const [allFriends, setAllFriends] = useState([]);
+
+  const [shouldSave, setShouldSave] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+
+  const [showFriends, setShowFriends] = useState(false);  
+
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const getAllFriends = async () => {
+      const res = await axios.get(apiRoutes.getAllUsers, axiosHeadersObject());
+      const tmp = res.data.data.filter(f => f.id !== user.id);
+      console.log(tmp);
+      setAllFriends(tmp);
+    };
+
+    getAllFriends();
+  }, [open]);
+
+  useEffect(() => {
+    if (groupName === '' && chosenGroupMembers.length === 0) {
+      setShouldSave(false);
+    } else {
+      setShouldSave(true);
+    }
+    
+  }, [groupName, chosenGroupMembers]);
+
+  const handleSave = async () => {
+    if (!shouldSave) return;
+
+    console.log('save thui hehe !!');
+  
+
+    if (groupName.match(/^\s+$/) || !groupName) return;
+
+    setLoadingSave(true);
+
+    await fakeAxios(2000);
+
+    setLoadingSave(false);
+    setGroupName('');
+    setChosenGroupMembers([]);
+    setShouldSave(false);
+    setLoadingSave(false);
+
+
+    handleClose();
+  }
+
+  const isContainChosenMember = (id) => {
+    const found = chosenGroupMembers.find(m => m.id === id);
+    if (found) return true;
+    return false;
+  }
+
+  const handleRemoveChosenMember = (mem) => {
+    let foundIndex = -1;
+    chosenGroupMembers.find((e, index) => {
+      if (e.id === mem.id) { foundIndex = index; return true; }
+    });
+
+    chosenGroupMembers.splice(foundIndex,1);  // spliced element
+    setChosenGroupMembers([...chosenGroupMembers]);  // remaining elements
+  }
+
   return (
     <div>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={() => {
+          setLoadingSave(false);
+          setGroupName('');
+          setChosenGroupMembers([]);
+          setShouldSave(false);
+          setLoadingSave(false);
+
+          handleClose();
+        }}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
+        <div style = {{ position: 'absolute', left: '39%', top: '15%',  width: '700px' }}>
+          <div class="phone">
+            <div class="chevron" 
+                onClick = {() => { 
+                  handleClose(); 
+                }} 
+                style = {{ height: '40px', width: '40px' }}>
+            </div>
+            <div class="title">New Chat Group</div>
+            
+            <figure className ="avatar" style = {{ width: '90px', height: '90px' }}>
+              <img 
+                class="rounded-circle" 
+                src={ PF + "person/groupChat.png" }
+              />
+            </figure>
+
+            <div class="name">{ 'create new group' }</div>
+            
+            <div class="prop">Group Name</div>
+            <input class="value"
+              value = {groupName}
+              onChange = {(e) => {
+                setGroupName(e.target.value);
+              }}
+            />
+            
+            <div class="prop" 
+              style = {{
+                cursor: 'pointer'
+              }}
+            >
+              <span style = {{ marginRight: '3px' }} onClick = {() => { setShowFriends(!showFriends) }}>Group Members</span>
+              {
+                !showFriends ? 
+                <AddCircle fontSize='medium' onClick = {() => { setShowFriends(!showFriends) }}/>
+                : 
+                <AddCircleOutline fontSize='medium' onClick = {() => { setShowFriends(!showFriends) }}/>
+              }
+            </div>
+            <div
+              class="value" 
+              onClick = {() => {
+                setShowFriends(false);
+              }}
+              
+              style = {{
+                height: '25px',
+                position: 'relative',
+                cursor: 'pointer',
+                width: '380px'
+              }}
+            >
+              {
+                chosenGroupMembers.map((m) => 
+                <span style = {{
+                  marginRight: '3px',
+                  backgroundColor: '#e0e0e0',
+                  padding: '1px 6px 2px 6px',
+                  borderRadius: '10px',
+                  fontWeight: '500'
+                }}>
+                  {m.user_name}
+                  <HighlightOff 
+                    fontSize='small' 
+                    style = {{ marginLeft: '17px' }} 
+                    onClick = {() => {
+                      handleRemoveChosenMember(m);
+                    }}
+                  />
+                </span>)
+              }
+            </div>
+          
+            {
+              showFriends ? 
+              <div 
+                style = {{ 
+                  position: 'absolute', 
+                  top: '350px' , 
+                  height: '250px', 
+                  width: '380px',
+                  overflow: 'hidden',
+                  overflowY: 'scroll',
+                  marginTop: '-7px',
+                  marginLeft: '100px'
+                }}>
+                {
+                  allFriends.map((f) => 
+                    <MenuItem 
+                      style = {{ 
+                        backgroundColor: '#e0e0e0', 
+                        width: '280px', 
+                        borderRadius: '4px 4px 4px 4px',
+                        height: '50px',
+                        opacity: '0.95'
+                      }}
+
+                      onClick = {() => {
+                        if(isContainChosenMember(f.id)) return;
+                        setChosenGroupMembers([...chosenGroupMembers, { id: f.id, user_name: f.user_name }]);
+                      }}
+                    >
+                        <img className='avatar' 
+                          style = {{ 
+                            width: '30px',
+                            height: '30px',
+                            marginTop: '0px',
+                            marginRight: '30px'
+                          }} 
+                          src = {f.profile_pic_url ? f.profile_pic_url : PF + "person/noAvatar.png"}
+                        />
+                        <span>{f.user_name}</span>
+                    </MenuItem>
+                  )
+                }
+              </div> 
+              : 
+              <></>
+            }
+            {
+              loadingSave ? <div class="loader-save"></div>
+              :
+              <button 
+                onClick = {handleSave}
+
+                style = {
+                  shouldSave ? 
+                  { 
+                    marginTop: '50px', 
+                    border: 'none', 
+                    padding: '6px 25px', 
+                    borderRadius: '20px', 
+                    backgroundColor: '#437ab7',
+                    fontWeight: '400',
+                    outline: 'none',
+                  }
+                  :
+                  { 
+                    marginTop: '50px', 
+                    border: 'none', 
+                    padding: '6px 25px', 
+                    borderRadius: '20px', 
+                    backgroundColor: '#c7c5c5',
+                    fontWeight: '400',
+                    outline: 'none',
+                  }
+                }>
+                  Create Group                
+              </button>
+            }
+          </div>
+        </div>
       </Modal>
     </div>
   );
 }
-
-
-
-// export default function NewGroupModal() {
-//     return (
-//         <div class="modal fade" id="newGroup" tabindex="-1" role="dialog" aria-hidden="true">
-//             <div class="modal-dialog modal-dialog-centered modal-dialog-zoom" role="document">
-//                 <div class="modal-content">
-//                     <div class="modal-header">
-//                         <h5 class="modal-title">
-//                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users mr-2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> New Group
-//                         </h5>
-//                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-//                             <i class="ti-close"></i>
-//                         </button>
-//                     </div>
-//                     <div class="modal-body">
-//                         <form>
-//                             <div class="form-group">
-//                                 <label for="group_name" class="col-form-label">Group name</label>
-//                                 <div class="input-group">
-//                                     <input type="text" class="form-control" id="group_name" />
-//                                     <div class="input-group-append">
-//                                         <button class="btn btn-light" data-toggle="tooltip" title="" type="button" data-original-title="Emoji">
-//                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-smile"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-//                                         </button>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <p class="mb-2">The group members</p>
-//                             <div class="form-group">
-//                                 <div class="avatar-group">
-//                                     <figure class="avatar" data-toggle="tooltip" title="" data-original-title="Tobit Spraging">
-//                                         <span class="avatar-title bg-success rounded-circle">T</span>
-//                                     </figure>
-//                                     <figure class="avatar" data-toggle="tooltip" title="" data-original-title="Cloe Jeayes">
-//                                         <img src="./dist/media/img/women_avatar4.jpg" class="rounded-circle" alt="image" />
-//                                     </figure>
-//                                     <figure class="avatar" data-toggle="tooltip" title="" data-original-title="Marlee Perazzo">
-//                                         <span class="avatar-title bg-warning rounded-circle">M</span>
-//                                     </figure>
-//                                     <figure class="avatar" data-toggle="tooltip" title="" data-original-title="Stafford Pioch">
-//                                         <img src="./dist/media/img/man_avatar1.jpg" class="rounded-circle" alt="image" />
-//                                     </figure>
-//                                     <figure class="avatar" data-toggle="tooltip" title="" data-original-title="Bethena Langsdon">
-//                                         <span class="avatar-title bg-info rounded-circle">B</span>
-//                                     </figure>
-//                                     <a href="#" title="Add friends">
-//                                         <figure class="avatar">
-//                                             <span class="avatar-title bg-primary rounded-circle">
-//                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-//                                             </span>
-//                                         </figure>
-//                                     </a>
-//                                 </div>
-//                             </div>
-//                             <div class="form-group">
-//                                 <label for="description" class="col-form-label">Description</label>
-//                                 <textarea class="form-control" id="description"></textarea>
-//                             </div>
-//                         </form>
-//                     </div>
-//                     <div class="modal-footer">
-//                         <button type="button" class="btn btn-primary">Create Group</button>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
