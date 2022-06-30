@@ -76,7 +76,7 @@ export default function ConversationSidebar ({ conversations, currentUser, setCu
                 <form>
                     <input type="text" className ="form-control" placeholder="Search chats" />
                 </form>
-                <div className ="sidebar-body" tabIndex="2" style={{overflow: "hidden", outline: "none" }}>
+                <div className ="sidebar-body" tabIndex="2" style={{overflow: "hidden", outline: "none", overflowY: 'scroll' }}>
                     <ul className ="list-group list-group-flush">
                         {conversations.map((c, index) => (
                             <li onClick={() => { handleClick(c) }} key={index}>
