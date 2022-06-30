@@ -47,7 +47,7 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
   }, [open]);
 
   useEffect(() => {
-    if (groupName === '' && chosenGroupMembers.length === 0) {
+    if (groupName === '' || chosenGroupMembers.length === 0) {
       setShouldSave(false);
     } else {
       setShouldSave(true);
@@ -83,10 +83,10 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
     return false;
   }
 
-  const handleRemoveChosenMember = (mem) => {
+  const handleRemoveChosenMember = (id) => {
     let foundIndex = -1;
     chosenGroupMembers.find((e, index) => {
-      if (e.id === mem.id) { foundIndex = index; return true; }
+      if (e.id === id) { foundIndex = index; return true; }
     });
 
     chosenGroupMembers.splice(foundIndex,1);  // spliced element
@@ -159,7 +159,10 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
                 height: '25px',
                 position: 'relative',
                 cursor: 'pointer',
-                width: '380px'
+                width: '380px',
+                height: '50px',
+                overflow: 'hidden',
+                overflowY: 'scroll'
               }}
             >
               {
@@ -176,7 +179,7 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
                     fontSize='small' 
                     style = {{ marginLeft: '17px' }} 
                     onClick = {() => {
-                      handleRemoveChosenMember(m);
+                      handleRemoveChosenMember(m.id);
                     }}
                   />
                 </span>)
@@ -188,30 +191,31 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
               <div 
                 style = {{ 
                   position: 'absolute', 
-                  top: '350px' , 
+                  top: '379px' , 
                   height: '250px', 
-                  width: '380px',
+                  width: '215px',
                   overflow: 'hidden',
                   overflowY: 'scroll',
                   marginTop: '-7px',
-                  marginLeft: '100px'
+                  marginLeft: 'auto'
                 }}>
                 {
                   allFriends.map((f) => 
                     <MenuItem 
                       style = {{ 
                         backgroundColor: '#e0e0e0', 
-                        width: '280px', 
+                        width: '200px', 
                         borderRadius: '4px 4px 4px 4px',
                         height: '50px',
                         opacity: '0.95'
                       }}
-
-                      onClick = {() => {
-                        if(isContainChosenMember(f.id)) return;
-                        setChosenGroupMembers([...chosenGroupMembers, { id: f.id, user_name: f.user_name }]);
-                      }}
                     >
+                      <div 
+                        onClick = {() => {
+                          if(isContainChosenMember(f.id)) return;
+                          setChosenGroupMembers([...chosenGroupMembers, { id: f.id, user_name: f.user_name }]);
+                        }}
+                      >
                         <img className='avatar' 
                           style = {{ 
                             width: '30px',
@@ -221,7 +225,18 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
                           }} 
                           src = {f.profile_pic_url ? f.profile_pic_url : PF + "person/noAvatar.png"}
                         />
-                        <span>{f.user_name}</span>
+                        <span style={{ fontWeight: '500' }}>{f.user_name}</span>
+                      </div>
+                      {
+                        isContainChosenMember(f.id) ? 
+                        <HighlightOff 
+                          fontSize='small' 
+                          style = {{ marginLeft: 'auto' }} 
+                          onClick = {() => {
+                            handleRemoveChosenMember(f.id);
+                          }}
+                        />: <></>
+                      }
                     </MenuItem>
                   )
                 }
