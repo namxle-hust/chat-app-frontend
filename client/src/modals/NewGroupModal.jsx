@@ -6,7 +6,7 @@ import { apiRoutes, axiosHeadersObject, fakeAxios } from "../utils-contants";
 import MenuItem from '@mui/material/MenuItem';
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { HighlightOff, AddCircleOutline, AddCircle } from '@material-ui/icons';
+import { HighlightOff, AddCircleOutline, AddCircle, LaptopWindows } from '@material-ui/icons';
 
 
 const style = {
@@ -39,7 +39,7 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
     const getAllFriends = async () => {
       const res = await axios.get(apiRoutes.getAllUsers, axiosHeadersObject());
       const tmp = res.data.data.filter(f => f.id !== user.id);
-      console.log(tmp);
+      
       setAllFriends(tmp);
     };
 
@@ -56,16 +56,16 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
   }, [groupName, chosenGroupMembers]);
 
   const handleSave = async () => {
-    if (!shouldSave) return;
-
-    console.log('save thui hehe !!');
-  
-
+    if (!shouldSave) return;  
     if (groupName.match(/^\s+$/) || !groupName) return;
 
     setLoadingSave(true);
 
-    await fakeAxios(2000);
+    // await fakeAxios(2000);
+    const res = await axios.post('/group/create', axiosHeadersObject(), {
+      name: groupName,
+      user_ids: chosenGroupMembers.map((el) => el.id)
+    });
 
     setLoadingSave(false);
     setGroupName('');
@@ -73,8 +73,9 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
     setShouldSave(false);
     setLoadingSave(false);
 
-
     handleClose();
+    
+    window.location.reload();
   }
 
   const isContainChosenMember = (id) => {
@@ -113,6 +114,12 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
           <div class="phone">
             <div class="chevron" 
                 onClick = {() => { 
+                  setLoadingSave(false);
+                  setGroupName('');
+                  setChosenGroupMembers([]);
+                  setShouldSave(false);
+                  setLoadingSave(false);
+
                   handleClose(); 
                 }} 
                 style = {{ height: '40px', width: '40px' }}>
