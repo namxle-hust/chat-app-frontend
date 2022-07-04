@@ -13,6 +13,10 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
     const [clickedUser, setClickedUser] = useState(null);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
+    // -------------------------
+    const [filterFriends, setFilterFriends] = useState([]);
+    const [filterText, setFilterText] = useState('');
+
     useEffect(() => {
         const getAllFriends = async () => {
             const res = await axios.get(apiRoutes.getAllUsers, axiosHeadersObject());
@@ -55,6 +59,24 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
     };
     // ------------- </ drop down menu function> -------------
 
+    useEffect(() => {
+        setFilterFriends(allFriends);
+    }, [allFriends]);
+
+    const filterSearchFriends =(searchText) => {
+        if (searchText === '') setFilterFriends(allFriends);
+
+        const filtered = allFriends.filter(friend => {
+            if (friend.user_name.includes(searchText)) {
+                return true;
+            }
+
+            return false;
+        });
+
+        setFilterFriends(filtered);
+    }
+
     return (
         <div id="friends" className ="sidebar active">
             <header>
@@ -74,12 +96,22 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
                 </ul> */}
             </header>
             <form>
-                <input type="text" className ="form-control" placeholder="Search friends" />
+                <input 
+                    type="text" 
+                    className ="form-control" 
+                    placeholder="Search friends" 
+                    value = {filterText}
+                    onChange = {(e) => {
+                        setFilterText(e.target.value);
+                        filterSearchFriends(e.target.value);
+                    }}
+                />
             </form>
             <div className ="sidebar-body" tabIndex="3" style = {{ overFlow: 'hidden', outline: 'none' }}>
                 <ul className ="list-group list-group-flush">
-                    {allFriends.map((o) => {
-
+                    {
+                    
+                    filterFriends.map((o) => {
                         return (
                             <li className ="list-group-item" data-navigation-target="chats" key={o.id}>
                                 {
