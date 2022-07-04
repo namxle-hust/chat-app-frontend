@@ -8,19 +8,6 @@ import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { HighlightOff, AddCircleOutline, AddCircle, LaptopWindows } from '@material-ui/icons';
 
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
 export default function NewGroupModal({ open, handleOpen, handleClose }) {
   const [groupName, setGroupName] = useState('');
   const [chosenGroupMembers, setChosenGroupMembers] = useState([]); // { id: 1, user_name: '' }
@@ -61,11 +48,10 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
 
     setLoadingSave(true);
 
-    // await fakeAxios(2000);
-    const res = await axios.post('/group/create', axiosHeadersObject(), {
+    await axios.post('/group/create', {
       name: groupName,
       user_ids: chosenGroupMembers.map((el) => el.id)
-    });
+    },axiosHeadersObject())
 
     setLoadingSave(false);
     setGroupName('');
@@ -74,7 +60,7 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
     setLoadingSave(false);
 
     handleClose();
-    
+
     window.location.reload();
   }
 
@@ -222,6 +208,10 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
                           if(isContainChosenMember(f.id)) return;
                           setChosenGroupMembers([...chosenGroupMembers, { id: f.id, user_name: f.user_name }]);
                         }}
+
+                        style = {{
+                          overflowX: 'scroll'
+                        }}
                       >
                         <img className='avatar' 
                           style = {{ 
@@ -232,7 +222,12 @@ export default function NewGroupModal({ open, handleOpen, handleClose }) {
                           }} 
                           src = {f.profile_pic_url ? f.profile_pic_url : PF + "person/noAvatar.png"}
                         />
-                        <span style={{ fontWeight: '500' }}>{f.user_name}</span>
+                        <span 
+                          style={{ 
+                            fontWeight: '500',
+                          }}>
+                            {f.user_name}
+                        </span>
                       </div>
                       {
                         isContainChosenMember(f.id) ? 
