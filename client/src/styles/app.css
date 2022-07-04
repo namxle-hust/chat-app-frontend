@@ -8851,7 +8851,7 @@ body.form-membership .form-wrapper hr {
   .time {
   color: #828282;
   margin-top: 2px;
-  font-style: italic;
+  font-style: normal;
   font-size: 12px;
 }
 
@@ -9044,7 +9044,7 @@ body.form-membership .form-wrapper hr {
   margin-right: 0;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 900px) {
   body.navigation-open:after {
     content: "";
     display: block;
