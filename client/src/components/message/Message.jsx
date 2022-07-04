@@ -2,7 +2,7 @@
 import { format } from "timeago.js";
 import { VideocamOffRounded, VideocamRounded } from '@material-ui/icons';
 
-export default function Message({ message, messageType, own, senderUsername, senderProfilePicture, messageTime, messageTimeTotal, isLastMessSent, isLastMessDelivered }) {
+export default function Message({ message, messageType, own, senderUsername, senderProfilePicture, messageTime, messageTimeTotal, isLastMessSent, isLastMessDelivered, is_group }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
@@ -23,9 +23,30 @@ export default function Message({ message, messageType, own, senderUsername, sen
                 </div>
             </div> */}
 
-            {/* <div className="message-avatar" style = {{ marginBottom: '3px' }}>
-                <span style = {{ fontSize: '15px', color: 'rgba(165,165,165,0.6)' }}>{senderUsername}</span>
-            </div> */}
+            {
+              is_group ? 
+              
+                <div className="message-avatar" style = {{ marginBottom: '3px' }}>
+                  {
+                    own ? 
+                      <>
+                        <span style = {{ fontSize: '15px', color: 'rgba(165,165,165,0.6)' }}>{senderUsername}</span>
+                        <figure className ="avatar" style = {{ width: '29px', height: '29px', marginLeft: '15px' }}>
+                          <img src={ senderProfilePicture ? senderProfilePicture : PF + "person/noAvatar.png"} className ="rounded-circle" alt="image" />
+                        </figure>
+                      </>
+                      :
+                      <>
+                        <figure className ="avatar" style = {{ width: '29px', height: '29px' }}>
+                          <img src={ senderProfilePicture ? senderProfilePicture : PF + "person/noAvatar.png"} className ="rounded-circle" alt="image" />
+                        </figure>
+                        <span style = {{ fontSize: '15px', color: 'rgba(165,165,165,0.6)' }}>{senderUsername}</span>
+                      </>
+                  }
+                </div>
+              
+              : <></>
+            }
             <div className = { messageType === 'image_url' ? "" : "message-content"} 
                   style = {
                     messageType === 'call' ? {backgroundColor: '#ebebeb', color: 'black'}:{
@@ -78,9 +99,6 @@ export default function Message({ message, messageType, own, senderUsername, sen
                         hour: 'numeric',
                         minute: 'numeric',
                         hour12: false,
-                        // day: 'numeric',
-                        // month: 'numeric',
-                        // year: '2-digit'
                       })} 
                     </span>
                     {
