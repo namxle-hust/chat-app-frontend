@@ -146,13 +146,17 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
                                             'aria-labelledby': 'basic-button',
                                         }}
                                     >
-                                        <MenuItem onClick={() => {
-                                            handleClose();
-                                            setProfileBarActive(true); 
-                                            setProfileBarUserInfo(clickedUser);
-                                        }}> 
-                                            Profile
-                                        </MenuItem>
+                                        <div>
+                                            <MenuItem 
+                                                onClick={() => {
+                                                    handleClose();
+                                                    setProfileBarActive(true); 
+                                                    setProfileBarUserInfo(clickedUser);
+                                                }} 
+                                            > 
+                                                Profile
+                                            </MenuItem>
+                                        </div>
                                     </Menu>
                                 </div>
                             </li>
