@@ -7,6 +7,7 @@ import "./styles/app.css";
 import "./styles/app2.css";
 import "./styles/app3.css";
 import "./styles/app4.css";
+import "./styles/icono.min.css";
 
 ReactDOM.render(
   <React.StrictMode>

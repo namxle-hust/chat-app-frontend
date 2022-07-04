@@ -14,6 +14,7 @@ export const apiRoutes = {
     getUser: (id) => { return `/users/${id}` },
     createNewConversation: `/conversations`, // co the ko can
     findAConversation: (userId) => { return `/conversation/private-chat/${userId}` }, // find a conversation with the other user (id)
+    findGroupConversation: (convId) => { return `/conversation/group/${convId}`}, // find a group coversation
     getConversations: `/conversations`,  // get conversations of current user
     createAMessage: () => { return `/messages`; },      // create a message
     getMessages: (conversationId) => { return `/messages/${conversationId}`}, // get messages of a conversation

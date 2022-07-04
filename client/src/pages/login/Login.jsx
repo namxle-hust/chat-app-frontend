@@ -19,51 +19,6 @@ export default function Login() {
   };
 
   return (
-    // <div className Name="login">
-    //   <div className Name="loginWrapper">
-    //     <div className Name="loginLeft">
-    //       <h3 className Name="loginLogo">Hoang cute social</h3>
-    //       <span className Name="loginDesc">
-    //         Connect with friends and the world around you on Lamasocial.
-    //       </span>
-    //     </div>
-    //     <div className Name="loginRight">
-    //       <form className Name="loginBox" onSubmit={handleClick}>
-    //         <input
-    //           placeholder="Email"
-    //           type="email"
-    //           required
-    //           className Name="loginInput"
-    //           ref={email}
-    //         />
-    //         <input
-    //           placeholder="Password"
-    //           type="password"
-    //           required
-    //           minLength="6"
-    //           className Name="loginInput"
-    //           ref={password}
-    //         />
-    //         <button className Name="loginButton" type="submit" disabled={isFetching}>
-    //           {isFetching ? (
-    //             <CircularProgress color="white" size="20px" />
-    //           ) : (
-    //             "Log In"
-    //           )}
-    //         </button>
-    //         <span className Name="loginForgot">Forgot Password?</span>
-    //         <button type="button" className Name="loginRegisterButton" onClick={() => { history.push("/"); }}>
-    //           {isFetching ? (
-    //             <CircularProgress color="white" size="20px" />
-    //           ) : (
-    //             "Create a New Account"
-    //           )}
-    //         </button>
-    //       </form>
-    //     </div>
-    //   </div>
-    // </div>
-
     <body className="form-membership">
       <div className="form-wrapper">
         <div className="logo">
