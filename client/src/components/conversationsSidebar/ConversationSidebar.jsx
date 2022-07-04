@@ -5,9 +5,14 @@ import { navigations } from '../../utils-contants';
 import NewGroupModal from '../../modals/NewGroupModal';
 import axios from "axios";
 import { apiRoutes, axiosHeadersObject } from "../../utils-contants";
-import { SignalCellularNoSimOutlined } from '@material-ui/icons';
+import { useState } from 'react';
 
 export default function ConversationSidebar ({ conversations, currentUser, setCurrentChat, onlineUsersId, setCurrentNavigation }) {
+    
+    const [filterConversations, setFilterConversations] = useState([]);
+    const [filterText, setFilterText] = useState('');
+    
+    // ---------------- modal ------------------------------------
     const [openNewGroupModal, setOpenNewGroupModal] = React.useState(false);
     const handleOpenModal = () => setOpenNewGroupModal(true);
     const handleCloseModal = () => setOpenNewGroupModal(false);
@@ -56,6 +61,17 @@ export default function ConversationSidebar ({ conversations, currentUser, setCu
         }
     };
 
+    const filterSearchConversations =(searchText) => {
+        const filtered = conversations.filter(conv => {
+            if (conv.conversation_name.includes(searchText)) {
+                return true;
+            }
+
+            return false;
+        });
+
+        setFilterConversations(filtered);
+    }
 
     return (
         <>
@@ -90,20 +106,42 @@ export default function ConversationSidebar ({ conversations, currentUser, setCu
                     </ul>
                 </header>
                 <form>
-                    <input type="text" className ="form-control" placeholder="Search chats" />
+                    <input 
+                        type="text" 
+                        className ="form-control" 
+                        placeholder="Search chats" 
+                        onChange = {(e) => {
+                            setFilterText(e.target.value);
+                            filterSearchConversations(e.target.value);
+                        }}
+                        value = {filterText}
+                    />
                 </form>
                 <div className ="sidebar-body" tabIndex="2" style={{overflow: "hidden", outline: "none", overflowY: 'scroll' }}>
                     <ul className ="list-group list-group-flush">
-                        {conversations.map((c, index) => (
-                            <li onClick={() => { handleClick(c) }} key={index}>
-                                <Conversation 
-                                    conversation={c} 
-                                    currentUser={currentUser} 
-                                    onlineUsersId = {onlineUsersId}
-                                    key={index}
-                                />
-                            </li>
-                        ))}
+
+                        {!filterText ? 
+                            conversations.map((c, index) => (
+                                <li onClick={() => { handleClick(c) }} key={index}>
+                                    <Conversation 
+                                        conversation={c} 
+                                        currentUser={currentUser} 
+                                        onlineUsersId = {onlineUsersId}
+                                        key={index}
+                                    />
+                                </li>
+                            )) : 
+                            filterConversations.map((c, index) => (
+                                <li onClick={() => { handleClick(c) }} key={index}>
+                                    <Conversation 
+                                        conversation={c} 
+                                        currentUser={currentUser} 
+                                        onlineUsersId = {onlineUsersId}
+                                        key={index}
+                                    />
+                                </li>
+                            ))
+                        }
                     </ul>
                 </div>
             </div>
