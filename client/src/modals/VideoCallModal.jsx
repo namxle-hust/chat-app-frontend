@@ -18,14 +18,14 @@ export default function VideoCallModal({
   arrivalMessage
 }) {
 
-  // useEffect(() => {
+  useEffect(() => {
     
-  //   if (arrivalMessage?.message_type === 'call' && arrivalMessage?.message === 'Missed Call') {
-  //     handleClose();
-  //     setCurrentCallingUser(null);
-  //     setCurrentCallId(null);
-  //   }
-  // }, [arrivalMessage]);
+    if (arrivalMessage?.message_type === 'call' && arrivalMessage?.message === 'Missed Call') {
+      handleClose();
+      setCurrentCallingUser(null);
+      setCurrentCallId(null);
+    }
+  }, [arrivalMessage]);
   
   const handleVideoCall =() => {
     function createPopupWin(pageURL, pageTitle, width, height) {
