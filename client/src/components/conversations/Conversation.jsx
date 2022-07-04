@@ -9,8 +9,6 @@ export default function Conversation({ conversation, currentUser, onlineUsersId 
   const [isConversationOnline, setIsOnline] = useState(false);
   const [convImg, setConvImg] = useState('');   // get conv img on backend later
 
-  // console.log('conversation: ', conversation);
-
   useEffect(() => {
     // private chat
     if (!conversation.is_group) {
@@ -43,6 +41,8 @@ export default function Conversation({ conversation, currentUser, onlineUsersId 
 
     if (!conversation.is_group) {
       if (onlineUsersId.includes(conversation.user_id)) setIsOnline(true);
+    } else {
+      // ko lam online oke :))
     }
 
   }, [onlineUsersId]);
@@ -50,12 +50,12 @@ export default function Conversation({ conversation, currentUser, onlineUsersId 
   return (
       <div className="list-group-item">
         <figure className = {isConversationOnline ? "avatar avatar-state-success" : "avatar"}>
-            <img src={ convImg ? convImg : PF + "person/noAvatar.png" } className="rounded-circle" alt="image" />
+            <img src={ conversation.is_group ? PF + "person/groupChat.png" : convImg ? convImg : PF + "person/noAvatar.png" } className="rounded-circle" alt="image" />
         </figure>
         <div className="users-list-body">
           <div>
               <h5 className="text-primary">{conversation.conversation_name}</h5>
-              <p>{conversation.last_message}</p>
+              <p>{conversation.message_type === "image_url" ? 'Sent an image ...' : conversation.last_message}</p>
           </div>
           <div className="users-list-action">
               {/* new message count later using notification service */}

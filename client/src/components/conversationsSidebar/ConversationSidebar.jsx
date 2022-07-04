@@ -5,6 +5,7 @@ import { navigations } from '../../utils-contants';
 import NewGroupModal from '../../modals/NewGroupModal';
 import axios from "axios";
 import { apiRoutes, axiosHeadersObject } from "../../utils-contants";
+import { SignalCellularNoSimOutlined } from '@material-ui/icons';
 
 export default function ConversationSidebar ({ conversations, currentUser, setCurrentChat, onlineUsersId, setCurrentNavigation }) {
     const [openNewGroupModal, setOpenNewGroupModal] = React.useState(false);
@@ -33,6 +34,21 @@ export default function ConversationSidebar ({ conversations, currentUser, setCu
             
             } else {
                 // if group chat
+                const res = await axios.get(
+                    apiRoutes.findGroupConversation(conv.conversation_id),
+                    axiosHeadersObject()
+                );
+
+                // console.log(res);
+    
+                const conversation = {
+                    is_group: true,
+                    conversation_id: conv.conversation_id,
+                    ...res.data.data
+                };
+                
+
+                setCurrentChat({...conversation});
             }
 
         } catch (err) {
