@@ -15,15 +15,17 @@ export default function VideoCallModal({
   currentCallId, 
   setCurrentCallId, 
   handleVideoCallDecline,
-  arrivalMessage
+  arrivalMessage,
+  isCurrentGroupCall,
+  setIsCurrentGroupCall
 }) {
 
   useEffect(() => {
     
     if (arrivalMessage?.message_type === 'call' && arrivalMessage?.message === 'Missed Call') {
       handleClose();
-      setCurrentCallingUser(null);
-      setCurrentCallId(null);
+
+      resetVideoCallState();
     }
   }, [arrivalMessage]);
   
@@ -48,23 +50,43 @@ export default function VideoCallModal({
       );
     }
 
-    let tmpObj = {
-      user_token: localStorage.getItem('token'),
-      user_id: currentCallingUser.id,
-      status: 'answer',
-      call_id: currentCallId
+    if (!isCurrentGroupCall) {
+      let tmpObj = {
+        user_token: localStorage.getItem('token'),
+        user_id: currentCallingUser.id,
+        status: 'answer',
+        call_id: currentCallId
+      }
+  
+      let url = `http://localhost:9090/${tmpObj.user_token}/${tmpObj.user_id}/${tmpObj.status}/${tmpObj.call_id}`;
+      createPopupWin(url, "Video Call", "990", "650");
+
+    } else {
+
+      let tmpObj = {
+        user_token: localStorage.getItem('token'),
+        group_id: currentCallingUser.group_id,
+        status: 'answer',
+        call_id: currentCallId
+      }
+  
+      let url = `http://localhost:9090/group/${tmpObj.user_token}/${tmpObj.group_id}/${tmpObj.status}/${tmpObj.call_id}`;
+      createPopupWin(url, "Video Call", "990", "650");
+
     }
 
-    let url = `http://localhost:9090/${tmpObj.user_token}/${tmpObj.user_id}/${tmpObj.status}/${tmpObj.call_id}`;
-    createPopupWin(url, "Video Call", "990", "650");
+    resetVideoCallState();
+  }
 
+  const resetVideoCallState =() => {
     setCurrentCallingUser(null);
     setCurrentCallId(null);
+    setIsCurrentGroupCall(false);
   }
 
 
   return (
-    <div>
+    
       <Modal
         open={open}
         onClose={handleClose}
@@ -83,23 +105,29 @@ export default function VideoCallModal({
                                 <div className = 'call-animation'>
                                   {/* <figure class="mb-4 avatar avatar-xl"> */}
                                       <img 
-                                            src={currentCallingUser.profile_pic_url ? 
-                                            currentCallingUser.profile_pic_url
-                                            : 
-                                            PF + "person/noAvatar.png"}
-                                            class="" alt="image" 
-                                            style = {{
-                                              width: '120px',
-                                              height: '120px',
-                                              borderRadius: '100%',
-                                              position: 'absolute',
-                                              left: '-5px',
-                                              top: '-5px'
-                                            }}
+                                            src={
+                                              isCurrentGroupCall ? 
+                                              PF + "person/groupChat.png"
+                                              :
+                                              currentCallingUser?.profile_pic_url ? 
+                                              currentCallingUser.profile_pic_url
+                                              : 
+                                              PF + "person/noAvatar.png"}
+                                              
+                                              alt="image" 
+                                              style = {{
+                                                width: '120px',
+                                                height: '120px',
+                                                borderRadius: '100%',
+                                                position: 'absolute',
+                                                left: '-5px',
+                                                top: '-5px'
+                                              }
+                                            }
                                       />
                                   {/* </figure> */}
                                 </div>
-                                <h4 style = {{ marginTop: '40px' }}> {currentCallingUser.user_name} <span class="text-success">video calling...</span></h4>
+                                <h4 style = {{ marginTop: '40px' }}> {isCurrentGroupCall ? currentCallingUser.conversationName : currentCallingUser?.user_name} <span class="text-success">video calling...</span></h4>
                                 <div class="action-button">
                                     <button type="button" class="btn btn-danger btn-floating btn-lg" data-dismiss="modal" 
                                       style = {{
@@ -107,11 +135,12 @@ export default function VideoCallModal({
                                         height: '55px'
                                       }}
                                       onClick = {(e) => {
+                                        // decline video call
                                         e.preventDefault();
                                         handleClose();
-                                        handleVideoCallDecline(currentCallingUser.id, currentCallId);
-                                        setCurrentCallingUser(null);
-                                        setCurrentCallId(null);
+                                        handleVideoCallDecline(currentCallingUser?.id, currentCallId, isCurrentGroupCall);
+
+                                        resetVideoCallState();
                                       }}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -139,6 +168,6 @@ export default function VideoCallModal({
 
         
       </Modal>
-    </div>
+    
   );
 }
