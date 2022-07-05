@@ -117,7 +117,7 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
                                 {
                                     onlineUsersId.includes(o.id) ? 
                                     <div onClick={() => { handleClick(o)}}>
-                                        <figure className ="avatar avatar-state-success">
+                                        <figure className ="avatar avatar-state-success" style = {{ marginTop: '0px' }}>
                                             <img 
                                                 src={
                                                     o?.profile_pic_url
@@ -131,7 +131,7 @@ export default function FriendsSidebar ({ onlineUsersId, currentId, setCurrentCh
                                     </div>
                                     : 
                                     <div onClick={() => { handleClick(o) }}>
-                                        <figure className ="avatar">
+                                        <figure className ="avatar" style = {{ marginTop: '0px' }}>
                                             <img 
                                                 src={
                                                     o?.profile_pic_url
