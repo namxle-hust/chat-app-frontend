@@ -6,14 +6,25 @@ import axios from "axios";
 import { axiosHeadersObject } from "../../utils-contants";
 import Share from '../share/Share';
 import EmojiPicker from '../emojiPicker/EmojiPicker';
-import { SentimentSatisfiedAltOutlined, PeopleAlt } from '@material-ui/icons';
+import { SentimentSatisfiedAltOutlined, PeopleAlt, FiberManualRecord } from '@material-ui/icons';
 import ChatBoxMembersModal from '../../modals/ChatBoxMembersModal';
 
-export default function  CurrentChatBox({ messages, user, setNewMessage, newMessage, handleSubmit, scrollRef, currentChat, deliveredMessage }) {
+export default function  CurrentChatBox({ 
+    messages, 
+    user, 
+    setNewMessage, 
+    newMessage, 
+    handleSubmit, 
+    scrollRef, 
+    currentChat, 
+    deliveredMessage, 
+    onlineUsersId 
+}) {
     const [membersInBox, setMembersInBox] = useState([]);
     const [chatBoxImg, setChatBoxImg] = useState('');
     const [disableTextInput, setDisableTextInput] = useState(false);
     const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+    const [isOnline, setIsOnline] = useState(false); // for private chat only
 
     // --------- modal ------------------
     const [openMembersModal, setOpenMembersModal] = useState(false);
@@ -33,6 +44,12 @@ export default function  CurrentChatBox({ messages, user, setNewMessage, newMess
                 const receiver = res.data;
             
                 setMembersInBox([user, receiver]);      // the current logged in user always at the index 0.
+                
+                if (onlineUsersId.includes(receiver.id)) {
+                    setIsOnline(true);
+                } else {
+                    setIsOnline(false);
+                }
             };
 
             get2Members();
@@ -49,6 +66,17 @@ export default function  CurrentChatBox({ messages, user, setNewMessage, newMess
         }
 
     }, [currentChat]);
+
+    useEffect(() => {
+        if (!currentChat.is_group) {
+            // receiver only
+            if (onlineUsersId.includes(membersInBox[1]?.id)) {
+                setIsOnline(true);
+            } else {
+                setIsOnline(false);
+            }
+        }
+    }, [onlineUsersId]);
 
 
     useEffect(() => {
@@ -101,6 +129,16 @@ export default function  CurrentChatBox({ messages, user, setNewMessage, newMess
 
         } else {
             // group video chat
+
+            let tmpObj = {
+                user_token: localStorage.getItem('token'),
+                group_id: currentChat.conversation_id,
+                status: 'calling',
+                call_id: null
+            }
+    
+            let url = `http://localhost:9090/group/${tmpObj.user_token}/${tmpObj.group_id}/${tmpObj.status}/${tmpObj.call_id}`;
+            createPopupWin(url, "Video Call", "990", "650");
         }
     }
 
@@ -116,11 +154,15 @@ export default function  CurrentChatBox({ messages, user, setNewMessage, newMess
         <div className ="chat">
             <div className ="chat-header">
                 <div className ="chat-header-user">
-                    <figure className ="avatar">
+                    <figure className ="avatar" style = {{ marginTop: '0px' }}>
                         <img src={ chatBoxImg } className ="rounded-circle" alt="image" />
                     </figure>
                     <div>
                         <h5>{ currentChat.conversationName }</h5>
+                        {isOnline ? 
+                            <span>Online <FiberManualRecord fontSize = 'small' htmlColor='#00ba51'/> </span>: 
+                            <></>
+                        }
                     </div>
                 </div>     
                 <div className ="chat-header-action">
