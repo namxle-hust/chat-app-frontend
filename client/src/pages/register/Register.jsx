@@ -30,6 +30,61 @@ export default function Register() {
   };
 
   return (
+    // <div className Name="login">
+    //   <div className Name="loginWrapper">
+    //     <div className Name="loginLeft">
+    //       <h3 className Name="loginLogo">Hoang cute social</h3>
+    //       <span className Name="loginDesc">
+    //         Connect with friends and the world around you on Lamasocial.
+    //       </span>
+    //     </div>
+    //     <div className Name="loginRight">
+    //       <form className Name="loginBox" onSubmit={handleClick}>
+    //         <input
+    //           placeholder="Username"
+    //           required
+    //           ref={username}
+    //           className Name="loginInput"
+    //         />
+    //         <input
+    //           placeholder="Email"
+    //           required
+    //           ref={email}
+    //           className Name="loginInput"
+    //           type="email"
+    //         />
+    //         <input
+    //           placeholder="Password"
+    //           required
+    //           ref={password}
+    //           className Name="loginInput"
+    //           type="password"
+    //           minLength="6"
+    //         />
+    //         <input
+    //           placeholder="Confirm Password"
+    //           required
+    //           ref={passwordAgain}
+    //           className Name="loginInput"
+    //           type="password"
+    //         />
+    //         <button className Name="loginButton" type="submit">
+    //           Sign Up
+    //         </button>
+    //         <button
+    //           className Name="loginRegisterButton"
+    //           type="button"
+    //           onClick={() => {
+    //             history.push("/login");
+    //           }}
+    //         >
+    //           Login into Account
+    //         </button>
+    //       </form>
+    //     </div>
+    //   </div>
+    // </div>
+
     <body className="form-membership">
       <div className="form-wrapper">
         {/* <!-- logo --> */}

@@ -118,7 +118,7 @@ export default function Login() {
           <button
             className="btn btn-outline-light btn-sm"
             onClick={() => {
-              history.push("/");
+              history.push("/register");
             }}
           >
             {isFetching ? (
