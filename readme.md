@@ -42,27 +42,27 @@ Try [Node version manager](https://github.com/nvm-sh/nvm) for quickly changing n
 #### 1. Change directory
 
 ```
-    cd chat-app-frontend
+  $  cd chat-app-frontend
 ```
 
 #### 2. Install required packages
 
 ```
-    yarn install
+  $  yarn install
 ```
 
 #### 3. Run project
 
 ```
-    yarn start
+  $  yarn start
 ```
     
 ### With the docker file
 
 ```
-    docker build -t chat-app-frontend:lastest .
+  $  docker build -t chat-app-frontend:lastest .
     
-    docker run -it --rm chat-app-frontend -p 3000:3000
+  $  docker run -it --rm chat-app-frontend -p 3000:3000
 ```
     
 
