@@ -15,7 +15,7 @@ ReactDOM.render(
       <VideoSocketContextProvider>
         <App />
       </VideoSocketContextProvider>
-    </AuthContextProvider>
+    </AuthContextProvider> 
   </React.StrictMode>,
   document.getElementById("root")
 );
