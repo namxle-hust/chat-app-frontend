@@ -31,7 +31,7 @@
   border-radius: 18px;
   display: flex;
   flex-direction: column;
-  height: 470px;
+  min-height: 470px;
   position: relative;
   width: 60%;
   box-shadow: 0px 1.7px 2.2px rgba(0, 0, 0, 0.02),
@@ -65,8 +65,8 @@
 }
 
 .chevron {
-    cursor: pointer;
-    margin-right: 85%;
+  cursor: pointer;
+  margin-right: 85%;
 }
 
 .avatar {
@@ -179,16 +179,20 @@ body.capture .date.capture {
 }
 
 .loader-save {
-    margin-top: 50px;
-    border: 5px solid #f3f3f3; /* Light grey */
-    border-top: 5px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    animation: spin 2s linear infinite;
+  margin-top: 50px;
+  border: 5px solid #f3f3f3; /* Light grey */
+  border-top: 5px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
