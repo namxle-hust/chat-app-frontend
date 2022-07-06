@@ -14,11 +14,11 @@
   left: 0;
   z-index: 1010;
   pointer-events: none;
-  overflow: hidden;
+  overflow: hidden
 }
 
 .enjoyhint_hide {
-  display: none;
+  display: none
 }
 
 .enjoyhint_disable_events {
@@ -26,7 +26,7 @@
   width: 2000px;
   height: 1500px;
   z-index: 1011;
-  pointer-events: all;
+  pointer-events: all
 }
 
 .enjoyhint_next_btn,
@@ -38,7 +38,7 @@
   cursor: pointer;
   margin: 0 auto;
   letter-spacing: 1px;
-  text-align: center;
+  text-align: center
 }
 
 .enjoyhint_close_btn,
@@ -48,7 +48,7 @@
   pointer-events: all;
   -o-text-overflow: clip;
   text-overflow: clip;
-  -moz-box-sizing: content-box;
+  -moz-box-sizing: content-box
 }
 
 .enjoyhint_next_btn {
@@ -59,27 +59,15 @@
   border-radius: 40px;
   color: #1ecd97;
   background: rgba(0, 0, 0, 0);
-  -webkit-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -moz-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -o-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
+  -webkit-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -moz-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -o-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0)
 }
 
 .enjoyhint_next_btn:hover {
   color: rgba(255, 255, 255, 1);
-  background: #1ecd97;
+  background: #1ecd97
 }
 
 .enjoyhint_next_btn:active {
@@ -88,7 +76,7 @@
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  transition: none;
+  transition: none
 }
 
 .enjoyhint_skip_btn {
@@ -98,27 +86,15 @@
   border-radius: 40px;
   color: #1ecd97;
   background: rgba(0, 0, 0, 0);
-  -webkit-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -moz-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -o-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
+  -webkit-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -moz-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -o-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0)
 }
 
 .enjoyhint_skip_btn:hover {
   color: rgba(255, 255, 255, 1);
-  background: #1ecd97;
+  background: #1ecd97
 }
 
 .enjoyhint_skip_btn:active {
@@ -127,7 +103,7 @@
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  transition: none;
+  transition: none
 }
 
 .enjoyhint_close_btn {
@@ -135,15 +111,15 @@
   position: absolute;
   -webkit-box-sizing: content-box;
   box-sizing: content-box;
-  width: 0.3em;
-  height: 0.3em;
+  width: .3em;
+  height: .3em;
   border: none;
   -webkit-border-radius: 1em;
   border-radius: 1em;
-  font: 400 8em / normal Arial, Helvetica, sans-serif;
+  font: 400 8em/normal Arial, Helvetica, sans-serif;
   color: rgba(0, 0, 0, 1);
   background: rgba(0, 0, 0, 0);
-  border: 2px solid rgba(33, 224, 163, 1);
+  border: 2px solid rgba(33, 224, 163, 1)
 }
 
 .enjoyhint_close_btn::after,
@@ -154,13 +130,13 @@
   position: absolute;
   content: "";
   border: none;
-  font: 400 100% / normal Arial, Helvetica, sans-serif;
+  font: 400 100%/normal Arial, Helvetica, sans-serif;
   color: rgba(0, 0, 0, 1);
   background: #fff;
   text-shadow: none;
   -o-text-overflow: clip;
   text-overflow: clip;
-  display: inline-block;
+  display: inline-block
 }
 
 .enjoyhint_close_btn::before {
@@ -169,7 +145,7 @@
   top: 48%;
   left: 14%;
   -webkit-transform: rotateZ(45deg);
-  transform: rotateZ(45deg);
+  transform: rotateZ(45deg)
 }
 
 .enjoyhint_close_btn::after {
@@ -178,13 +154,13 @@
   top: 46%;
   left: 15%;
   -webkit-transform: rotateZ(-45deg);
-  transform: rotateZ(-45deg);
+  transform: rotateZ(-45deg)
 }
 
 .enjoyhint_close_btn:hover {
   color: rgba(255, 255, 255, 1);
   background: #1ecd97;
-  cursor: pointer;
+  cursor: pointer
 }
 
 .enjoyhint_close_btn:active {
@@ -193,7 +169,7 @@
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  transition: none;
+  transition: none
 }
 
 .enjoyhint_btn {
@@ -214,22 +190,10 @@
   text-overflow: clip;
   letter-spacing: 1px;
   background: rgba(0, 0, 0, 0);
-  -webkit-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -moz-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  -o-transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
-  transition: background-color 0.3s cubic-bezier(0, 0, 0, 0),
-    color 0.3s cubic-bezier(0, 0, 0, 0), width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-width 0.3s cubic-bezier(0, 0, 0, 0),
-    border-color 0.3s cubic-bezier(0, 0, 0, 0);
+  -webkit-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -moz-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  -o-transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0);
+  transition: background-color .3s cubic-bezier(0, 0, 0, 0), color .3s cubic-bezier(0, 0, 0, 0), width .3s cubic-bezier(0, 0, 0, 0), border-width .3s cubic-bezier(0, 0, 0, 0), border-color .3s cubic-bezier(0, 0, 0, 0)
 }
 
 #kinetic_container,
@@ -238,12 +202,12 @@
 .enjoyhint_svg_wrapper svg {
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: absolute
 }
 
 .enjoyhint_btn:hover {
   color: rgba(255, 255, 255, 1);
-  background: #1ecd97;
+  background: #1ecd97
 }
 
 .enjoyhint_btn:active {
@@ -252,41 +216,41 @@
   -webkit-transition: none;
   -moz-transition: none;
   -o-transition: none;
-  transition: none;
+  transition: none
 }
 
 .enjoyhint div.canvas-container {
-  position: absolute;
+  position: absolute
 }
 
 .enjoyhint_canvas {
   z-index: 100;
-  pointer-events: none;
+  pointer-events: none
 }
 
 #kinetic_container {
   pointer-events: none;
   top: 0;
-  left: 0;
+  left: 0
 }
 
 .enjoyhint_svg_wrapper {
   top: 0;
   left: 0;
   z-index: 100;
-  -webkit-transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
-  -moz-transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
-  transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+  -webkit-transition: opacity .4s cubic-bezier(.42, 0, .58, 1);
+  -moz-transition: opacity .4s cubic-bezier(.42, 0, .58, 1);
+  transition: opacity .4s cubic-bezier(.42, 0, .58, 1)
 }
 
 .enjoyhint_svg_wrapper svg {
   top: 0;
-  left: 0;
+  left: 0
 }
 
 .enjoyhint_svg_transparent .enjoy_hint_label,
 .enjoyhint_svg_transparent .enjoyhint_svg_wrapper {
-  opacity: 0;
+  opacity: 0
 }
 
 .enjoy_hint_label {
@@ -295,19 +259,19 @@
   z-index: 107;
   font-size: 22px;
   font-family: casino_handregular, Arial;
-  -webkit-transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
-  -moz-transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
-  transition: opacity 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+  -webkit-transition: opacity .4s cubic-bezier(.42, 0, .58, 1);
+  -moz-transition: opacity .4s cubic-bezier(.42, 0, .58, 1);
+  transition: opacity .4s cubic-bezier(.42, 0, .58, 1);
   display: inline-block;
   min-width: 200px;
   text-align: center;
-  max-width: 80%;
+  max-width: 80%
 }
 
 div.kineticjs-content {
-  position: absolute !important;
+  position: absolute !important
 }
 
 .enjoyhint_skip_btn {
-  position: fixed;
+  position: fixed
 }
