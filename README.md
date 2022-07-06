@@ -19,14 +19,16 @@
 
 2. Features 
 - Our app has some of the features below:
-  + Register, Login
-  + Watch your profile
-  + Watch others' profiles
-  + update your profile
-  + Show list of friends
-  + Show list of conversations: private Chat or Group Chat
-  + upload emoji, upload image in chat box
-  + private Chat video call, group videl call
+  + Register, Login, Logout.
+  + View your profile.
+  + View other's profiles.
+  + Update password, user name, email.
+  + Show online users.
+  + Show list of friends.
+  + Show list of conversations: Private Chat(1v1) or Group Chat.
+  + Send emoji, image, text in chat box for both Private Chat & Group Chat.
+  + Video call for private chat and group chat. 
+  + Video call screen sharing for private chat & group chat.
 
 
 ## Installation Guide
